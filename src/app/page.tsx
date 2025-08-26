@@ -48,7 +48,7 @@ export default function Home() {
       
     } catch (error) {
       console.error('Error submitting to waitlist:', error)
-      if (error.message === 'Request timeout') {
+      if (error instanceof Error && error.message === 'Request timeout') {
         setSubmitError('Google Apps Script is taking longer than expected. This usually means it\'s waking up from sleep mode. Please try again.')
       } else {
         setSubmitError('Failed to join waitlist. Please try again.')
@@ -102,8 +102,8 @@ export default function Home() {
       {/* Header */}
       <header className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 border-b" style={{ borderColor: 'rgba(246, 245, 232, 0.1)' }}>
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-2xl sm:text-3xl font-light tracking-wide" style={{ color: '#F6F5E8', fontFamily: 'Geist Sans, system-ui, sans-serif' }}>
-            eddie
+          <div>
+            <img src="/eddie-wordmark.svg" alt="eddie" className="h-8 sm:h-10" />
           </div>
           <button
             onClick={() => document.getElementById('waitlist-section')?.scrollIntoView({ behavior: 'smooth' })}
@@ -128,6 +128,7 @@ export default function Home() {
               
               {/* Left Column - Content */}
               <div className="space-y-8 sm:space-y-10 lg:space-y-12">
+                
                 <div className="inline-flex items-center px-4 py-2.5 rounded-full text-sm font-medium" style={{ 
                   backgroundColor: 'rgba(125, 250, 133, 0.1)', 
                   color: '#7DFA85',
