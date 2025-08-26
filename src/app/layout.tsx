@@ -11,16 +11,20 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Eddie - Email infrastructure to grow your business",
   description: "Privacy-first email infrastructure for fast growing companies. Run agents and automations securely on your email and proprietary data.",
-          icons: {
-          icon: [
-            {
-              url: "/favicon.svg",
-              type: "image/svg+xml",
-            }
-          ],
-          shortcut: "/favicon.svg",
-          apple: "/favicon.svg",
-        },
+  icons: {
+    icon: [
+      {
+        url: "/eddie-swirl-black.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/eddie-swirl-white.svg",
+        type: "image/svg+xml",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
