@@ -1,8 +1,0 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- White spiral logo exactly as shown in screenshot -->
-  <path d="M16 4 C24 4, 28 8, 28 16 C28 22, 25 26, 19 26 C14 26, 11 22, 11 17 C11 13, 13 10, 17 10 C20 10, 22 12, 22 15 C22 17, 21 18, 19 18 C18 18, 17.5 17.5, 17.5 16.5 C17.5 16, 17.7 15.7, 18 15.7" 
-        stroke="#F6F5E8" 
-        stroke-width="2" 
-        stroke-linecap="round" 
-        fill="none"/>
-</svg>

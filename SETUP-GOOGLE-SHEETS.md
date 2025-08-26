@@ -48,7 +48,8 @@
 
 ## What Gets Stored
 Each submission creates a row with:
-- **Timestamp**: When the email was submitted
+- **Timestamp**: When the form was submitted
+- **Name**: The user's name
 - **Email**: The user's email address
 - **Source**: "Eddie Landing Page"
 

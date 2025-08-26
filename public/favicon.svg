@@ -1,16 +1,8 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#1a1a1a;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#2a2a2a;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#000000;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#00ff66;stop-opacity:1" />
-      <stop offset="50%" style="stop-color:#00dd55;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#00bb44;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  <rect width="32" height="32" rx="6" fill="url(#bgGradient)" stroke="#00ff66" stroke-width="0.5" stroke-opacity="0.3"/>
-  <text x="16" y="20" text-anchor="middle" fill="url(#textGradient)" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="8" letter-spacing="-0.2px">e</text>
+  <!-- White spiral favicon -->
+  <path d="M16 4 C24 4, 28 8, 28 16 C28 22, 25 26, 19 26 C14 26, 11 22, 11 17 C11 13, 13 10, 17 10 C20 10, 22 12, 22 15 C22 17, 21 18, 19 18 C18 18, 17.5 17.5, 17.5 16.5 C17.5 16, 17.7 15.7, 18 15.7" 
+        stroke="#F6F5E8" 
+        stroke-width="2" 
+        stroke-linecap="round" 
+        fill="none"/>
 </svg>

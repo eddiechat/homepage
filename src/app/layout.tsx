@@ -16,14 +16,10 @@ export const metadata: Metadata = {
             {
               url: "/favicon.svg",
               type: "image/svg+xml",
-            },
-            {
-              url: "/icon.svg", 
-              type: "image/svg+xml",
             }
           ],
           shortcut: "/favicon.svg",
-          apple: "/icon.svg",
+          apple: "/favicon.svg",
         },
 };
 

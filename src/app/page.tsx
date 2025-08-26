@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { CheckCircle2, TrendingUp, Mail, Users, Shield, Zap, Code2 } from 'lucide-react'
 
 export default function Home() {
+  const [waitlistName, setWaitlistName] = useState('')
   const [waitlistEmail, setWaitlistEmail] = useState('')
   const [waitlistSubmitted, setWaitlistSubmitted] = useState(false)
   const [waitlistSubmitting, setWaitlistSubmitting] = useState(false)
@@ -11,7 +12,7 @@ export default function Home() {
 
   const handleWaitlistSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!waitlistEmail) return
+    if (!waitlistName || !waitlistEmail) return
     
     setWaitlistSubmitting(true)
     setSubmitError('')
@@ -20,22 +21,28 @@ export default function Home() {
       // Google Apps Script web app URL for Eddie waitlist
       const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzuVzCGeriGGoKgbRBebPUQtjOsyZa-plEklcLVMH88gar8y6RV6KTtltrtNBZsi6S2/exec'
       
-      // Submit to Google Apps Script with a reasonable timeout
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Request timeout')), 6000) // 6 second timeout
+      // Create a timeout promise (8 seconds for Google Apps Script)
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error('Request timeout')), 8000)
       })
       
+      // Create the fetch promise
       const fetchPromise = fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'text/plain',
         },
         body: JSON.stringify({
+          name: waitlistName,
           email: waitlistEmail,
           timestamp: new Date().toISOString(),
           source: 'Eddie Landing Page'
         })
+      }).then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        return response
       })
       
       // Race between fetch and timeout
@@ -43,15 +50,38 @@ export default function Home() {
       
       // Success! Update state and show confirmation
       setWaitlistSubmitted(true)
+      setWaitlistName('')
       setWaitlistEmail('')
-      console.log('Email submitted successfully to Google Apps Script')
+      console.log('Name and email submitted successfully to Google Apps Script')
       
     } catch (error) {
       console.error('Error submitting to waitlist:', error)
-      if (error instanceof Error && error.message === 'Request timeout') {
-        setSubmitError('Google Apps Script is taking longer than expected. This usually means it\'s waking up from sleep mode. Please try again.')
+      
+      // Store name and email locally as fallback
+      if (typeof window !== 'undefined') {
+        const savedSubmissions = JSON.parse(localStorage.getItem('eddie-waitlist') || '[]')
+        savedSubmissions.push({
+          name: waitlistName,
+          email: waitlistEmail,
+          timestamp: new Date().toISOString(),
+          source: 'Eddie Landing Page'
+        })
+        localStorage.setItem('eddie-waitlist', JSON.stringify(savedSubmissions))
+        console.log('Name and email saved locally as fallback')
+      }
+      
+      if (error instanceof Error) {
+        if (error.message === 'Request timeout') {
+          setSubmitError('Google Apps Script is taking longer than expected. Your email has been saved locally. Please try again later or contact support.')
+        } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+          setSubmitError('Network error. Your email has been saved locally. Please check your connection and try again.')
+        } else if (error.message.includes('HTTP error!')) {
+          setSubmitError('Server error. Your email has been saved locally. Please try again in a few moments.')
+        } else {
+          setSubmitError('Submission failed but your email has been saved locally. Please try again.')
+        }
       } else {
-        setSubmitError('Failed to join waitlist. Please try again.')
+        setSubmitError('An unexpected error occurred. Your email has been saved locally.')
       }
     } finally {
       // Always stop the loading state
@@ -90,11 +120,6 @@ export default function Home() {
       title: "Customer Support",
       description: "Based on existing support databases and end-user tutorials; triage, answer, or escalate incoming customer requests to the appropriate support team."
     },
-    {
-      icon: <Code2 className="w-5 h-5" />,
-      title: "Product Data",
-      description: "Based on incoming updates from suppliers, identify product ID and appropriate schema, then correct missing or updated product data."
-    }
   ]
 
   return (
@@ -129,16 +154,8 @@ export default function Home() {
               {/* Left Column - Content */}
               <div className="space-y-8 sm:space-y-10 lg:space-y-12">
                 
-                <div className="inline-flex items-center px-4 py-2.5 rounded-full text-sm font-medium" style={{ 
-                  backgroundColor: 'rgba(125, 250, 133, 0.1)', 
-                  color: '#7DFA85',
-                  border: '1px solid rgba(125, 250, 133, 0.2)'
-                }}>
-                  🚀 Limited Early Access
-                </div>
-                
                 <div className="space-y-8 sm:space-y-10 lg:space-y-12">
-                  <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-light tracking-wide leading-[1.1]" style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}>
+                  <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-light tracking-wide leading-[1.1]" style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}>
                     <span style={{ color: '#F6F5E8' }}>Email.</span>
                     <br /><span style={{ color: '#F6F5E8' }}>Conversations.</span>
                     <br /><span style={{ color: '#7DFA85' }}>Upgraded.</span>
@@ -160,9 +177,6 @@ export default function Home() {
                   >
                     Get early access
                   </button>
-                  <p className="text-sm sm:text-base flex items-center px-2 sm:px-4" style={{ color: 'rgba(246, 245, 232, 0.6)' }}>
-                    Join forward thinking founders
-                  </p>
                 </div>
               </div>
               
@@ -176,7 +190,7 @@ export default function Home() {
                   }}
                 >
                   <div className="space-y-6 sm:space-y-8">
-                    <div className="text-lg sm:text-xl font-medium" style={{ color: '#F6F5E8' }}>Eddie is an email client that delivers:</div>
+                    <div className="text-lg sm:text-xl font-medium" style={{ color: '#F6F5E8' }}>Eddie is an email client that delivers</div>
                     <div className="space-y-4 sm:space-y-5">
                       <div className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-lg hover:bg-white/5 transition-colors">
                         <div className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full flex-shrink-0" style={{ backgroundColor: '#7DFA85' }}></div>
@@ -254,7 +268,7 @@ export default function Home() {
                   </h3>
                 </div>
                 <p className="text-lg sm:text-xl mb-8 max-w-3xl mx-auto" style={{ color: 'rgba(246, 245, 232, 0.8)' }}>
-                  Businesses, agencies, and individual developers can create custom automations tailored to their unique workflows. Build once, scale infinitely.
+                  Businesses, Agencies and Developers can create custom automations tailored to their unique workflows. Build once, scale infinitely.
                 </p>
                 <button
                   onClick={() => document.getElementById('waitlist-section')?.scrollIntoView({ behavior: 'smooth' })}
@@ -284,38 +298,57 @@ export default function Home() {
                   <p className="text-lg sm:text-xl font-medium mb-3" style={{ color: '#7DFA85' }}>
                     Join the waitlist for exclusive early access
                   </p>
-                  <p className="text-base sm:text-lg" style={{ color: 'rgba(246, 245, 232, 0.8)' }}>
-                    Be among the first to experience AI-powered email automation
-                  </p>
                 </div>
                 
                                 {!waitlistSubmitted ? (
                   <form onSubmit={handleWaitlistSubmit} className="space-y-6 sm:space-y-8">
-                    <div>
-                      <label className="block text-base font-semibold mb-3" style={{ color: '#F6F5E8' }}>
-                        Your email
-                      </label>
-                      <input
-                        type="email"
-                        value={waitlistEmail}
-                        onChange={(e) => setWaitlistEmail(e.target.value)}
-                        placeholder="your@email.com"
-                        className="w-full px-6 sm:px-8 py-4 sm:py-5 rounded-lg text-base sm:text-lg border focus:outline-none transition-all duration-200 focus:border-[#7DFA85]"
-                        style={{
-                          backgroundColor: 'rgba(246, 245, 232, 0.05)',
-                          color: '#F6F5E8',
-                          borderColor: 'rgba(246, 245, 232, 0.2)'
-                        }}
-                        required
-                      />
-                      <p className="text-sm sm:text-base mt-3" style={{ color: 'rgba(246, 245, 232, 0.7)' }}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-base font-semibold mb-3" style={{ color: '#F6F5E8' }}>
+                          Your name
+                        </label>
+                        <input
+                          type="text"
+                          value={waitlistName}
+                          onChange={(e) => setWaitlistName(e.target.value)}
+                          placeholder="John Doe"
+                          className="w-full px-6 py-4 rounded-lg text-base border focus:outline-none transition-all duration-200 focus:border-[#7DFA85]"
+                          style={{
+                            backgroundColor: 'rgba(246, 245, 232, 0.05)',
+                            color: '#F6F5E8',
+                            borderColor: 'rgba(246, 245, 232, 0.2)'
+                          }}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-base font-semibold mb-3" style={{ color: '#F6F5E8' }}>
+                          Your email
+                        </label>
+                        <input
+                          type="email"
+                          value={waitlistEmail}
+                          onChange={(e) => setWaitlistEmail(e.target.value)}
+                          placeholder="your@email.com"
+                          className="w-full px-6 py-4 rounded-lg text-base border focus:outline-none transition-all duration-200 focus:border-[#7DFA85]"
+                          style={{
+                            backgroundColor: 'rgba(246, 245, 232, 0.05)',
+                            color: '#F6F5E8',
+                            borderColor: 'rgba(246, 245, 232, 0.2)'
+                          }}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm sm:text-base mb-6" style={{ color: 'rgba(246, 245, 232, 0.7)' }}>
                         We'll only use this to send product updates and your invite.
                       </p>
                     </div>
                     
                                         <button
                       type="submit"
-                      disabled={waitlistSubmitting || !waitlistEmail}
+                      disabled={waitlistSubmitting || !waitlistName || !waitlistEmail}
                       className="w-full py-5 sm:py-6 px-8 sm:px-10 rounded-full text-lg sm:text-xl font-medium transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
                       style={{
                         backgroundColor: waitlistSubmitting ? '#5437FB' : '#7DFA85',
@@ -338,6 +371,7 @@ export default function Home() {
                         <button
                           onClick={() => {
                             setSubmitError('')
+                            setWaitlistName('')
                             setWaitlistEmail('')
                           }}
                           className="px-6 py-3 rounded-full text-base font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
@@ -369,6 +403,7 @@ export default function Home() {
                       <button
                         onClick={() => {
                           setWaitlistSubmitted(false)
+                          setWaitlistName('')
                           setWaitlistEmail('')
                           setSubmitError('')
                         }}

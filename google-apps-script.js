@@ -14,21 +14,22 @@ function doPost(e) {
     
     // Add headers if this is the first row
     if (sheet.getLastRow() === 0) {
-      sheet.appendRow(['Timestamp', 'Email', 'Source']);
+      sheet.appendRow(['Timestamp', 'Name', 'Email', 'Source']);
     }
     
-    // Add the new email to the sheet
+    // Add the new submission to the sheet
     sheet.appendRow([
       timestamp.toISOString(),
+      data.name || '',
       data.email,
-      'Eddie Landing Page'
+      data.source || 'Eddie Landing Page'
     ]);
     
     // Return success response
     return ContentService
       .createTextOutput(JSON.stringify({
         success: true,
-        message: 'Email added successfully'
+        message: 'Name and email added successfully'
       }))
       .setMimeType(ContentService.MimeType.JSON);
       
