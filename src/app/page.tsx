@@ -23,7 +23,7 @@ export default function Home() {
 
       // Submit to Google Apps Script with a reasonable timeout
       const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Request timeout')), 6000) // 6 second timeout
+        setTimeout(() => reject(new Error('Request timeout')), 30000) // 30 second timeout
       })
 
       const fetchPromise = fetch(GOOGLE_SCRIPT_URL, {
