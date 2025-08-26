@@ -12,21 +12,20 @@ export default function Home() {
 
   const handleWaitlistSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!waitlistName || !waitlistEmail) return
-    
+    if (!waitlistEmail) return
+
     setWaitlistSubmitting(true)
     setSubmitError('')
-    
+
     try {
       // Google Apps Script web app URL for Eddie waitlist
       const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzuVzCGeriGGoKgbRBebPUQtjOsyZa-plEklcLVMH88gar8y6RV6KTtltrtNBZsi6S2/exec'
-      
-      // Create a timeout promise (8 seconds for Google Apps Script)
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error('Request timeout')), 8000)
+
+      // Submit to Google Apps Script with a reasonable timeout
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Request timeout')), 6000) // 6 second timeout
       })
-      
-      // Create the fetch promise
+
       const fetchPromise = fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
         headers: {
@@ -44,19 +43,19 @@ export default function Home() {
         }
         return response
       })
-      
+
       // Race between fetch and timeout
       await Promise.race([fetchPromise, timeoutPromise])
-      
+
       // Success! Update state and show confirmation
       setWaitlistSubmitted(true)
       setWaitlistName('')
       setWaitlistEmail('')
-      console.log('Name and email submitted successfully to Google Apps Script')
-      
+      console.log('Email submitted successfully to Google Apps Script')
+
     } catch (error) {
       console.error('Error submitting to waitlist:', error)
-      
+
       // Store name and email locally as fallback
       if (typeof window !== 'undefined') {
         const savedSubmissions = JSON.parse(localStorage.getItem('eddie-waitlist') || '[]')
@@ -69,7 +68,7 @@ export default function Home() {
         localStorage.setItem('eddie-waitlist', JSON.stringify(savedSubmissions))
         console.log('Name and email saved locally as fallback')
       }
-      
+
       if (error instanceof Error) {
         if (error.message === 'Request timeout') {
           setSubmitError('Google Apps Script is taking longer than expected. Your email has been saved locally. Please try again later or contact support.')
@@ -97,7 +96,7 @@ export default function Home() {
     },
     {
       icon: <Mail className="w-5 h-5" />,
-      title: "Sales Outreach", 
+      title: "Sales Outreach",
       description: "Based on a list of companies and a description of a service to sell, find email addresses of relevant employees, research the company profiles, craft and send customized cold emails."
     },
     {
@@ -107,7 +106,7 @@ export default function Home() {
     },
     {
       icon: <Shield className="w-5 h-5" />,
-      title: "Procurement", 
+      title: "Procurement",
       description: "Based on inventory and sales forecast data, contact suppliers, negotiate prices, and place orders."
     },
     {
@@ -127,8 +126,9 @@ export default function Home() {
       {/* Header */}
       <header className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 border-b" style={{ borderColor: 'rgba(246, 245, 232, 0.1)' }}>
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div>
-            <img src="/eddie-wordmark.svg" alt="eddie" className="h-8 sm:h-10" />
+          <div className="flex gap-2 items-center">
+            <img src="/eddie-swirl-green.svg" alt="eddie" className="h-6 sm:h-6" />
+            <img src="/eddie-wordmark.svg" alt="eddie" className="h-8 sm:h-10" style={{ marginTop: "2px" }} />
           </div>
           <button
             onClick={() => document.getElementById('waitlist-section')?.scrollIntoView({ behavior: 'smooth' })}
@@ -146,26 +146,34 @@ export default function Home() {
       {/* Hero Section */}
       <main className="px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          
+
           {/* Hero */}
           <section className="py-16 sm:py-20 lg:py-28 xl:py-32">
             <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 xl:gap-24 items-center">
-              
+
               {/* Left Column - Content */}
               <div className="space-y-8 sm:space-y-10 lg:space-y-12">
-                
+
+                <div className="inline-flex items-center px-4 py-2.5 rounded-full text-sm font-medium" style={{
+                  backgroundColor: 'rgba(125, 250, 133, 0.1)',
+                  color: '#7DFA85',
+                  border: '1px solid rgba(125, 250, 133, 0.2)'
+                }}>
+                  🚀 Limited Early Access
+                </div>
+
                 <div className="space-y-8 sm:space-y-10 lg:space-y-12">
                   <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-light tracking-wide leading-[1.1]" style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}>
                     <span style={{ color: '#F6F5E8' }}>Email.</span>
                     <br /><span style={{ color: '#F6F5E8' }}>Conversations.</span>
                     <br /><span style={{ color: '#7DFA85' }}>Upgraded.</span>
                   </h1>
-                  
+
                   <p className="text-lg sm:text-xl lg:text-2xl leading-relaxed max-w-2xl" style={{ color: 'rgba(246, 245, 232, 0.8)' }}>
                     We're building the infrastructure for fast-growing companies to run agents and automations securely on their email and proprietary data.
                   </p>
                 </div>
-                
+
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:items-center">
                   <button
                     onClick={() => document.getElementById('waitlist-section')?.scrollIntoView({ behavior: 'smooth' })}
@@ -179,12 +187,12 @@ export default function Home() {
                   </button>
                 </div>
               </div>
-              
+
               {/* Right Column - Visual */}
               <div className="relative">
-                <div 
+                <div
                   className="rounded-2xl p-6 sm:p-8 lg:p-10 xl:p-14 border"
-                  style={{ 
+                  style={{
                     backgroundColor: 'rgba(246, 245, 232, 0.02)',
                     borderColor: 'rgba(246, 245, 232, 0.1)'
                   }}
@@ -212,7 +220,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              
+
             </div>
           </section>
 
@@ -226,10 +234,10 @@ export default function Home() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-16 sm:mb-20">
               {skills.map((skill, index) => (
-                <div 
+                <div
                   key={skill.title}
                   className="p-6 sm:p-8 lg:p-10 rounded-xl border hover:scale-105 transition-all duration-300 cursor-pointer group"
-                  style={{ 
+                  style={{
                     borderColor: 'rgba(246, 245, 232, 0.1)',
                     backgroundColor: 'rgba(246, 245, 232, 0.02)'
                   }}
@@ -299,8 +307,8 @@ export default function Home() {
                     Join the waitlist for exclusive early access
                   </p>
                 </div>
-                
-                                {!waitlistSubmitted ? (
+
+                {!waitlistSubmitted ? (
                   <form onSubmit={handleWaitlistSubmit} className="space-y-6 sm:space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
@@ -345,8 +353,8 @@ export default function Home() {
                         We'll only use this to send product updates and your invite.
                       </p>
                     </div>
-                    
-                                        <button
+
+                    <button
                       type="submit"
                       disabled={waitlistSubmitting || !waitlistName || !waitlistEmail}
                       className="w-full py-5 sm:py-6 px-8 sm:px-10 rounded-full text-lg sm:text-xl font-medium transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100 disabled:cursor-not-allowed"
@@ -364,7 +372,7 @@ export default function Home() {
                         'Get Early Access'
                       )}
                     </button>
-                    
+
                     {submitError && (
                       <div className="text-center space-y-4">
                         <p className="text-red-400 text-base font-medium">{submitError}</p>
@@ -419,7 +427,7 @@ export default function Home() {
                     </div>
                   </div>
                 )}
-                
+
                 <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-white/10 text-center">
                   <p className="text-xs sm:text-sm opacity-50">
                     No ads. No resale. You can unsubscribe anytime.
