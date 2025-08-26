@@ -14,14 +14,8 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/eddie-swirl-black.svg",
-        type: "image/svg+xml",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
         url: "/eddie-swirl-white.svg",
         type: "image/svg+xml",
-        media: "(prefers-color-scheme: dark)",
       },
     ],
   },
