@@ -148,11 +148,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
 
           {/* Hero */}
-          <section className="py-16 sm:py-20 lg:py-28 xl:py-32">
-            <div className="grid lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 xl:gap-24 items-center">
+          <section className="py-16 sm:py-20 lg:py-24 xl:py-28">
+            <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 xl:gap-20 items-center max-w-6xl mx-auto">
 
               {/* Left Column - Content */}
-              <div className="space-y-8 sm:space-y-10 lg:space-y-12">
+              <div className="space-y-6 sm:space-y-8 lg:space-y-10">
 
                 <div className="inline-flex items-center px-4 py-2.5 rounded-full text-sm font-medium" style={{
                   backgroundColor: 'rgba(125, 250, 133, 0.1)',
@@ -162,14 +162,14 @@ export default function Home() {
                   🚀 Limited Early Access
                 </div>
 
-                <div className="space-y-8 sm:space-y-10 lg:space-y-12">
-                  <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-light tracking-wide leading-[1.1]" style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}>
+                <div className="space-y-6 sm:space-y-8 lg:space-y-10">
+                  <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-light tracking-wide leading-[1.1]" style={{ fontFamily: 'Geist Sans, system-ui, sans-serif' }}>
                     <span style={{ color: '#F6F5E8' }}>Email.</span>
                     <br /><span style={{ color: '#F6F5E8' }}>Conversations.</span>
                     <br /><span style={{ color: '#7DFA85' }}>Upgraded.</span>
                   </h1>
 
-                  <p className="text-lg sm:text-xl lg:text-2xl leading-relaxed max-w-2xl" style={{ color: 'rgba(246, 245, 232, 0.8)' }}>
+                  <p className="text-base sm:text-lg lg:text-xl leading-relaxed max-w-xl" style={{ color: 'rgba(246, 245, 232, 0.8)' }}>
                     We're building the infrastructure for fast-growing companies to run agents and automations securely on their email and proprietary data.
                   </p>
                 </div>
@@ -225,18 +225,18 @@ export default function Home() {
           </section>
 
           {/* Skills Section */}
-          <section className="py-20 sm:py-24 lg:py-32">
-            <div className="text-center mb-16 sm:mb-20">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light px-4 leading-tight" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+          <section className="py-16 sm:py-20 lg:py-24">
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-light px-4 leading-tight" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
                 Example Skills for <span style={{ color: '#7DFA85' }}>Fast-Growing Companies</span>
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10 mb-16 sm:mb-20">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
               {skills.map((skill, index) => (
                 <div
                   key={skill.title}
-                  className="p-6 sm:p-8 lg:p-10 rounded-xl border hover:scale-105 transition-all duration-300 cursor-pointer group"
+                  className="p-6 sm:p-7 lg:p-8 rounded-xl border hover:scale-105 transition-all duration-300 cursor-pointer group"
                   style={{
                     borderColor: 'rgba(246, 245, 232, 0.1)',
                     backgroundColor: 'rgba(246, 245, 232, 0.02)'
@@ -263,7 +263,7 @@ export default function Home() {
 
             {/* Custom Workflow */}
             <div className="text-center">
-              <div className="max-w-5xl mx-auto p-8 sm:p-10 lg:p-12 rounded-2xl border" style={{
+              <div className="max-w-4xl mx-auto p-6 sm:p-8 lg:p-10 rounded-2xl border" style={{
                 backgroundColor: 'rgba(246, 245, 232, 0.02)',
                 borderColor: 'rgba(246, 245, 232, 0.1)'
               }}>
@@ -271,11 +271,11 @@ export default function Home() {
                   <div className="p-4 sm:p-5 rounded-xl" style={{ backgroundColor: 'rgba(125, 250, 133, 0.1)' }}>
                     <Code2 className="w-8 h-8 sm:w-10 sm:h-10" style={{ color: '#7DFA85' }} />
                   </div>
-                  <h3 className="text-3xl sm:text-4xl font-light text-center sm:text-left" style={{ color: '#F6F5E8', fontFamily: 'Inter, system-ui, sans-serif' }}>
+                  <h3 className="text-2xl sm:text-3xl font-light text-center sm:text-left" style={{ color: '#F6F5E8', fontFamily: 'Inter, system-ui, sans-serif' }}>
                     Custom Workflow
                   </h3>
                 </div>
-                <p className="text-lg sm:text-xl mb-8 max-w-3xl mx-auto" style={{ color: 'rgba(246, 245, 232, 0.8)' }}>
+                <p className="text-base sm:text-lg mb-8 max-w-2xl mx-auto" style={{ color: 'rgba(246, 245, 232, 0.8)' }}>
                   Businesses, Agencies and Developers can create custom automations tailored to their unique workflows. Build once, scale infinitely.
                 </p>
                 <button
@@ -293,18 +293,18 @@ export default function Home() {
           </section>
 
           {/* Waitlist Section */}
-          <section id="waitlist-section" className="py-24 sm:py-28 lg:py-32">
+          <section id="waitlist-section" className="py-16 sm:py-20 lg:py-24">
             <div className="max-w-3xl mx-auto">
-              <div className="p-8 sm:p-10 lg:p-14 rounded-2xl border" style={{
+              <div className="p-6 sm:p-8 lg:p-10 rounded-2xl border" style={{
                 backgroundColor: 'rgba(246, 245, 232, 0.02)',
                 borderColor: 'rgba(246, 245, 232, 0.1)'
               }}>
-                <div className="text-center mb-10 sm:mb-14">
-                  <h3 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-4 sm:mb-6" style={{ color: '#F6F5E8', fontFamily: 'Inter, system-ui, sans-serif' }}>
+                <div className="text-center mb-8 sm:mb-10">
+                  <h3 className="text-2xl sm:text-3xl lg:text-4xl font-light mb-4 sm:mb-6" style={{ color: '#F6F5E8', fontFamily: 'Inter, system-ui, sans-serif' }}>
                     Ready to transform your email?
                   </h3>
                   <p className="text-lg sm:text-xl font-medium mb-3" style={{ color: '#7DFA85' }}>
-                    Join the waitlist for exclusive early access
+                    Join the waitlist for early access
                   </p>
                 </div>
 
@@ -313,7 +313,7 @@ export default function Home() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-base font-semibold mb-3" style={{ color: '#F6F5E8' }}>
-                          Your name
+                          Full Name
                         </label>
                         <input
                           type="text"
@@ -331,7 +331,7 @@ export default function Home() {
                       </div>
                       <div>
                         <label className="block text-base font-semibold mb-3" style={{ color: '#F6F5E8' }}>
-                          Your email
+                          Email
                         </label>
                         <input
                           type="email"
