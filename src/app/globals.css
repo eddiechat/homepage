@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0A161C;
+  --foreground: #F6F5E8;
+  --accent: #7DFA85;
+  --brand: #5437FB;
+  --border: rgba(246, 245, 232, 0.1);
+  --surface: rgba(246, 245, 232, 0.02);
+  --muted: rgba(246, 245, 232, 0.8);
+  --muted-70: rgba(246, 245, 232, 0.7);
 }
 
 @theme inline {
@@ -11,12 +17,7 @@
   --font-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Single theme for now; override here if adding schemes */
 
 html {
   scroll-behavior: smooth;
@@ -26,7 +27,95 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
+}
+
+/* Semantic element defaults */
+header {
+  border-bottom: 1px solid var(--border);
+}
+
+main section {
+  color: var(--muted);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--foreground);
+}
+
+@layer base {
+  main section {
+    @apply text-lg sm:text-xl leading-relaxed space-y-4;
+  }
+
+  h1 {
+    @apply text-5xl sm:text-6xl lg:text-7xl font-light tracking-wide;
+  }
+
+  h2 {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-light;
+  }
+
+  h3 {
+    @apply text-2xl sm:text-3xl font-semibold;
+  }
+
+  p {
+    @apply text-base sm:text-lg;
+  }
+
+  a {
+    @apply cursor-pointer font-semibold;
+    color: var(--accent);
+  }
+}
+
+/* Utilities */
+.text-accent { color: var(--accent); }
+.text-muted { color: var(--muted); }
+.text-muted-70 { color: var(--muted-70); }
+.border-subtle { border-color: var(--border); }
+.surface { background-color: var(--surface); }
+
+/* Cards */
+.card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+/* Buttons */
+.btn-accent {
+  background-color: var(--accent);
+  color: #0A161C;
+}
+.btn-brand-ghost {
+  background: color-mix(in srgb, var(--brand) 20%, transparent);
+  border: 2px solid var(--brand);
+  color: var(--foreground);
+}
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Forms */
+label {
+  color: var(--foreground);
+}
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea, select {
+  background-color: rgba(246, 245, 232, 0.05);
+  color: var(--foreground);
+  border: 1px solid rgba(246, 245, 232, 0.2);
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
 }
 
 /* Custom scrollbar */
