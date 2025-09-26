@@ -49,14 +49,16 @@ export default function ContactForm() {
 
     return (
         <>
-            <div className="text-center mb-10 sm:mb-14">
-                <h3 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-4 sm:mb-6">
-                    Ready to transform your email?
-                </h3>
-                <p className="text-lg sm:text-xl font-medium mb-3 text-accent">
-                    Join the waitlist for exclusive early access
-                </p>
-            </div>
+            {!waitlistSubmitted && (
+                <div className="text-center mb-10 sm:mb-14">
+                    <h3 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-4 sm:mb-6">
+                        Ready to transform your email?
+                    </h3>
+                    <p className="text-lg sm:text-xl font-medium mb-3 text-accent">
+                        Join the waitlist for exclusive early access
+                    </p>
+                </div>
+            )}
 
             {!waitlistSubmitted ? (
                 <form action={formAction} className="space-y-6 sm:space-y-8">
@@ -140,17 +142,6 @@ export default function ContactForm() {
                     <p className="text-lg opacity-80 max-w-md mx-auto">
                         Your email has been added to our waitlist. We'll notify you as soon as Eddie is ready for early access.
                     </p>
-                    <button
-                        onClick={() => {
-                            setWaitlistSubmitted(false)
-                            setWaitlistName('')
-                            setWaitlistEmail('')
-                            setSubmitError('')
-                        }}
-                        className="mt-4 px-6 py-3 rounded-full text-base font-medium transition-all duration-200 hover:scale-105 btn-brand-ghost"
-                    >
-                        Add Another Email
-                    </button>
                 </div>
             )}
 
