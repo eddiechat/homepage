@@ -1,19 +1,12 @@
 'use client'
 
-import { useEffect } from 'react'
 import ContactForm from '@/components/ContactForm'
 
 export default function Home() {
-  useEffect(() => {
-    console.info('[Eddie] Page render: Home mounted')
-  }, [])
-
   const scrollToWaitlist = () => {
     console.debug('[Eddie] UI action: scroll to waitlist')
     document.getElementById('waitlist-section')?.scrollIntoView({ behavior: 'smooth' })
   }
-
-  // <span className="font-semibold text-accent">communication is humanity’s most precious commons.{" "}</span>
 
   return (
     <div className="min-h-screen">
@@ -58,8 +51,7 @@ export default function Home() {
         <section id="waitlist-section" className="mb-16">
           <div className="max-w-3xl mx-auto">
             <div className="p-8 sm:p-10 lg:p-14 rounded-2xl border card">
-              {/* <ContactForm /> */}
-              Contact form coming soon.
+              <ContactForm />
             </div>
           </div>
         </section>

@@ -1,90 +1,51 @@
 "use client"
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import { useActionState } from 'react'
 import { CheckCircle2 } from 'lucide-react'
+import { submitWaitlistAction, type WaitlistActionState } from '@/app/actions'
 
 export default function ContactForm() {
     const [waitlistName, setWaitlistName] = useState('')
     const [waitlistEmail, setWaitlistEmail] = useState('')
     const [waitlistSubmitted, setWaitlistSubmitted] = useState(false)
-    const [waitlistSubmitting, setWaitlistSubmitting] = useState(false)
     const [submitError, setSubmitError] = useState('')
+
+    const initialActionState: WaitlistActionState = useMemo(() => ({ success: false }), [])
+    const [actionState, formAction, isPending] = useActionState<WaitlistActionState, FormData>(submitWaitlistAction, initialActionState)
 
     useEffect(() => {
         console.info('[Eddie] Component render: ContactForm mounted')
     }, [])
 
-    const handleWaitlistSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        if (!waitlistEmail) return
-
-        setWaitlistSubmitting(true)
-        setSubmitError('')
-
-        try {
-            const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzuVzCGeriGGoKgbRBebPUQtjOsyZa-plEklcLVMH88gar8y6RV6KTtltrtNBZsi6S2/exec'
-
-            const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Request timeout')), 30000)
-            })
-
-            const fetchPromise = fetch(GOOGLE_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'text/plain',
-                },
-                body: JSON.stringify({
-                    name: waitlistName,
-                    email: waitlistEmail,
-                    timestamp: new Date().toISOString(),
-                    source: 'Eddie Landing Page'
-                })
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`)
-                }
-                return response
-            })
-
-            await Promise.race([fetchPromise, timeoutPromise])
-
+    useEffect(() => {
+        if (!actionState) return
+        if (actionState.success) {
+            console.info('[Eddie] UI state: waitlist submission successful')
             setWaitlistSubmitted(true)
             setWaitlistName('')
             setWaitlistEmail('')
-            console.log('Email submitted successfully to Google Apps Script')
-
-        } catch (error) {
-            console.error('Error submitting to waitlist:', error)
-
-            if (typeof window !== 'undefined') {
-                const savedSubmissions = JSON.parse(localStorage.getItem('eddie-waitlist') || '[]')
-                savedSubmissions.push({
-                    name: waitlistName,
-                    email: waitlistEmail,
-                    timestamp: new Date().toISOString(),
-                    source: 'Eddie Landing Page'
-                })
-                localStorage.setItem('eddie-waitlist', JSON.stringify(savedSubmissions))
-                console.log('Name and email saved locally as fallback')
-            }
-
-            if (error instanceof Error) {
-                if (error.message === 'Request timeout') {
-                    setSubmitError('Google Apps Script is taking longer than expected. Your email has been saved locally. Please try again later or contact support.')
-                } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-                    setSubmitError('Network error. Your email has been saved locally. Please check your connection and try again.')
-                } else if (error.message.includes('HTTP error!')) {
-                    setSubmitError('Server error. Your email has been saved locally. Please try again in a few moments.')
-                } else {
-                    setSubmitError('Submission failed but your email has been saved locally. Please try again.')
+            setSubmitError('')
+        } else if (actionState.error) {
+            console.warn('[Eddie] UI state: waitlist submission failed', actionState.error)
+            setSubmitError(
+                actionState.error
+            )
+            try {
+                if (typeof window !== 'undefined') {
+                    const savedSubmissions = JSON.parse(localStorage.getItem('eddie-waitlist') || '[]')
+                    savedSubmissions.push({
+                        name: waitlistName,
+                        email: waitlistEmail,
+                    })
+                    localStorage.setItem('eddie-waitlist', JSON.stringify(savedSubmissions))
+                    console.debug('[Eddie] Local fallback: saved waitlist submission to localStorage')
                 }
-            } else {
-                setSubmitError('An unexpected error occurred. Your email has been saved locally.')
+            } catch (e) {
+                console.error('[Eddie] Local fallback error', e)
             }
-        } finally {
-            setWaitlistSubmitting(false)
         }
-    }
+    }, [actionState, waitlistEmail, waitlistName])
 
     return (
         <>
@@ -98,7 +59,7 @@ export default function ContactForm() {
             </div>
 
             {!waitlistSubmitted ? (
-                <form onSubmit={handleWaitlistSubmit} className="space-y-6 sm:space-y-8">
+                <form action={formAction} className="space-y-6 sm:space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label className="block text-base font-semibold mb-3">
@@ -106,6 +67,7 @@ export default function ContactForm() {
                             </label>
                             <input
                                 type="text"
+                                name="name"
                                 value={waitlistName}
                                 onChange={(e) => setWaitlistName(e.target.value)}
                                 placeholder="John Doe"
@@ -119,6 +81,7 @@ export default function ContactForm() {
                             </label>
                             <input
                                 type="email"
+                                name="email"
                                 value={waitlistEmail}
                                 onChange={(e) => setWaitlistEmail(e.target.value)}
                                 placeholder="your@email.com"
@@ -135,10 +98,10 @@ export default function ContactForm() {
 
                     <button
                         type="submit"
-                        disabled={waitlistSubmitting || !waitlistName || !waitlistEmail}
-                        className={`w-full py-5 sm:py-6 px-8 sm:px-10 rounded-full text-lg sm:text-xl font-medium transition-all duration-200 hover:scale-105 active:scale-95 disabled:hover:scale-100 ${waitlistSubmitting ? 'btn-brand-ghost' : 'btn-accent'}`}
+                        disabled={isPending || !waitlistName || !waitlistEmail}
+                        className={`w-full py-5 sm:py-6 px-8 sm:px-10 rounded-full text-lg sm:text-xl font-medium transition-all duration-200 hover:scale-105 active:scale-95 disabled:hover:scale-100 ${isPending ? 'btn-brand-ghost' : 'btn-accent'}`}
                     >
-                        {waitlistSubmitting ? (
+                        {isPending ? (
                             <div className="flex items-center justify-center gap-3">
                                 <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
                                 <span>Submitting...</span>
