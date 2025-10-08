@@ -44,7 +44,7 @@ export default function Home() {
             we believe that conversations in natural language will remain the primary interface for services that need to seamlessly blend into our societies. the world revolves around human conversations, and we need an open platform with an ecosystem that can ensure the evolution of agentic skills that we all find useful. we are on a mission to restore the world’s conversational layer and build a human-centered platform for artificial intelligence that ensures alignment with humanity through mutual co-evolution.
           </div>
           <div>
-            <a onClick={scrollToWaitlist}>sign up</a> for early access, <a href="https://discord.gg/9Cc3VtWw">join</a> the community, <a href="https://github.com/eddiechat">contribute</a> to the codebase and spread the word.
+            <a onClick={scrollToWaitlist}>sign up</a> for early access, <a href="https://discord.gg/hd7jyej98Q">join</a> the community, <a href="https://github.com/eddiechat">contribute</a> to the codebase and spread the word.
           </div>
         </section>
 
