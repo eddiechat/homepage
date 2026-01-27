@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<clientConfig version="1.1">
+  <emailProvider id="eddie.chat">
+    <domain>eddie.chat</domain>
+    
+    <displayName>eddie.chat mail</displayName>
+    <displayShortName>eddie.chat</displayShortName>
+    
+    <incomingServer type="imap">
+      <hostname>mail.your-server.de</hostname>
+      <port>993</port>
+      <socketType>SSL</socketType>
+      <username>%EMAILADDRESS%</username>
+      <authentication>plain</authentication>
+    </incomingServer>
+    
+    <outgoingServer type="smtp">
+      <hostname>mail.your-server.de</hostname>
+      <port>465</port>
+      <socketType>SSL</socketType>
+      <username>%EMAILADDRESS%</username>
+      <authentication>plain</authentication>
+    </outgoingServer>
+
+    <addressBook type="carddav">
+      <hostname>webmail.your-server.de</hostname>
+      <port>443</port>
+      <socketType>SSL</socketType>
+      <username>%EMAILADDRESS%</username>
+      <authentication>plain</authentication>
+      <path>/rpc/addressbooks/%EMAILADDRESS%/</path>
+    </addressBook>
+  </emailProvider>
+</clientConfig>
